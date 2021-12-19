@@ -203,11 +203,11 @@ contract GenerationOmega is Ownable, ERC721B {
             '"constitution":', toString(con), ',',
             '"intelligence":', toString(intel), ',',
             '"wisdom":', toString(wis), ',',
-            '"charisma":', toString(cha), '}',
+            '"charisma":', toString(cha), '},',
             '"skills":["', 
             greatSkill, '","',
             goodSkill1, '","',
-            goodSkill2, '"]',
+            goodSkill2, '"],',
             '"image": "data:image/svg+xml;base64,',
             Base64.encode(bytes(output)), '"'
             '}'
