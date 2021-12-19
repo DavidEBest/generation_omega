@@ -38,7 +38,7 @@ contract GenerationOmega is Ownable, ERC721B {
 
   bool public saleLive;
 
-  constructor() ERC721B("Generation Omega", "GO") {}
+  constructor() ERC721B("Generation Omega", "GO") payable {}
 
   // ** - CORE - ** //
 

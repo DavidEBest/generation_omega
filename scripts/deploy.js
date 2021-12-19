@@ -1,9 +1,13 @@
 const main = async () => {
   const ContractFactory = await hre.ethers.getContractFactory("GenerationOmega");
 
-  const contract = await ContractFactory.deploy();
+  const contract = await ContractFactory.deploy({
+    value: hre.ethers.utils.parseEther('0.1')
+  });
   await contract.deployed();
   console.log("Contract deployed to:", contract.address);
+  let txn = await contract.ownerClaim(0);
+  console.log('tx', txn);
 };
 
 const runMain = async () => {
