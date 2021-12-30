@@ -21,8 +21,6 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./library/ERC721B.sol";
 import "./library/Base64.sol";
 
-pragma solidity ^0.8.4;
-
 contract GenerationOmega is Ownable, ERC721B {
   using Strings for uint256;
   using ECDSA for bytes32;
@@ -196,21 +194,19 @@ contract GenerationOmega is Ownable, ERC721B {
       bytes(
         string(
           abi.encodePacked(
-            '{"name": "Gen Omega #', toString(tokenId), '",',
-            '"attributes":{',
-            '"strength":', toString(str), ',',
-            '"dexterity":', toString(dex), ',',
-            '"constitution":', toString(con), ',',
-            '"intelligence":', toString(intel), ',',
-            '"wisdom":', toString(wis), ',',
-            '"charisma":', toString(cha), '},',
-            '"skills":["', 
-            greatSkill, '","',
-            goodSkill1, '","',
-            goodSkill2, '"],',
-            '"image": "data:image/svg+xml;base64,',
-            Base64.encode(bytes(output)), '"'
-            '}'
+            '{"name": "Generation Omega #', toString(tokenId), '",',
+            '"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '",',
+            '"attributes":[',
+              '{"trait_type": "Strength", "max_value": 7, "value": ', toString(str), '},',
+              '{"trait_type": "Dexterity", "max_value": 7, "value": ', toString(dex), '},',
+              '{"trait_type": "Constitution", "max_value": 7, "value": ', toString(con), '},',
+              '{"trait_type": "Intelligence", "max_value": 7, "value": ', toString(intel), '},',
+              '{"trait_type": "Wisdom", "max_value": 7, "value": ', toString(wis), '},',
+              '{"trait_type": "Charisma", "max_value": 7, "value": ', toString(cha), '},',
+              '{"trait_type": "Skill", "value": "', greatSkill, '"},', 
+              '{"trait_type": "Skill", "value": "', goodSkill1, '"},', 
+              '{"trait_type": "Skill", "value": "', goodSkill2, '"}', 
+            ']}'
           )
         )
       )
