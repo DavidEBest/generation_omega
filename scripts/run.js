@@ -1,20 +1,20 @@
 const main = async () => {
-  const ContractFactory = await hre.ethers.getContractFactory("GenerationOmega");
+  const GOFactory = await hre.ethers.getContractFactory("GenerationOmega");
+  const GORFactory = await hre.ethers.getContractFactory("GenerationOmegaRenderer");
 
-  const contract = await ContractFactory.deploy();
+
+  const contract = await GOFactory.deploy();
   await contract.deployed();
   console.log("Contract deployed to:", contract.address);
-  let txn = await contract.ownerClaim(0);
-  console.log('tx', txn);
-  txn = await contract.ownerClaim(1);
-  console.log('tx', txn);
-  txn = await contract.ownerClaim(2);
+
+  const rendererContract = await GORFactory.deploy();
+  await rendererContract.deployed();
+  console.log("Renderer Contract deployed to:", rendererContract.address);
+
+  let txn = await contract.setRendererContractAddress(rendererContract.address);
+  txn = await contract.ownerClaim(0);
   console.log('tx', txn);
   txn = await contract.tokenURI(0);
-  console.log('tx', txn);
-  txn = await contract.tokenURI(1);
-  console.log('tx', txn);
-  txn = await contract.tokenURI(2);
   console.log('tx', txn);
 };
 

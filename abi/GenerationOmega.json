@@ -342,6 +342,19 @@
   },
   {
     "inputs": [],
+    "name": "rendererContractAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -425,6 +438,19 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_rendererContractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setRendererContractAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
