@@ -10,5 +10,5 @@ npx hardhat test
 
 // To deploy to Rinkeby testnet
 
-npx hardhart run scripts/deploy.js --network rinkeby
+npx hardhat run scripts/deploy.js --network rinkeby
 ```

@@ -8,6 +8,8 @@ const main = async () => {
   console.log("Contract deployed to:", contract.address);
   let txn = await contract.ownerClaim(0);
   console.log('tx', txn);
+  txn = await contract.toggleSaleStatus();
+  console.log('tx', txn);
 };
 
 const runMain = async () => {
