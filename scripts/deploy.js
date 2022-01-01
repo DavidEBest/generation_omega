@@ -16,6 +16,8 @@ const main = async () => {
   console.log('tx', txn);
   txn = await contract.toggleSaleStatus();
   console.log('tx', txn);
+  txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
+  console.log('tx', txn);
 };
 
 const runMain = async () => {
