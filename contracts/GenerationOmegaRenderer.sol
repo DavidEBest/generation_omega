@@ -2,25 +2,23 @@
 pragma solidity ^0.8.4;
 
 /**
- * Solidity Contract Template based on
- * Source: https://etherscan.io/address/
+ * Generation Omega Renderer
  *
- * Add Introduction Here
+ * Generation Omega is a near future, post-apocalyptic
+ * setting for an RPG. The mintable tokens are randomized
+ * characters with attributes and skills.
  *
- * Add Summary Here
- *
- * Curated by @marcelc63 - marcelchristianis.com
- * Each functions have been annotated based on my own research.
- *
- * Feel free to use and modify as you see appropriate
+ * This contract packages up the rendering functions
+ * for the Generation Omega NFT project.
+ * 
+ * Developed by @scrimmage_us, based on contract
+ * breakdowns by @marcelc63.
  */
 
-//import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./library/Base64.sol";
 
 contract GenerationOmegaRenderer is Ownable {
-//  using Strings for uint256;
 
   // ** - RENDERING - ** //
 
@@ -34,7 +32,7 @@ contract GenerationOmegaRenderer is Ownable {
   }
 
   function getSkill(string memory val, uint256 tokenId, string memory level) internal view returns (string memory) {
-    uint256 rand = random(string(abi.encodePacked(val, toString(tokenId))));
+    uint256 rand = random(string(abi.encodePacked(val, level, toString(tokenId))));
     return string(abi.encodePacked(skills[rand % skills.length], ' ',level)); 
   }
 

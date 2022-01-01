@@ -2,17 +2,14 @@
 pragma solidity ^0.8.4;
 
 /**
- * Solidity Contract Template based on
- * Source: https://etherscan.io/address/
+ * Generation Omega
  *
- * Add Introduction Here
+ * Generation Omega is a near future, post-apocalyptic
+ * setting for an RPG. The mintable tokens are randomized
+ * characters with attributes and skills.
  *
- * Add Summary Here
- *
- * Curated by @marcelc63 - marcelchristianis.com
- * Each functions have been annotated based on my own research.
- *
- * Feel free to use and modify as you see appropriate
+ * Developed by @scrimmage_us, based on contract
+ * breakdowns by @marcelc63.
  */
 
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -32,8 +29,6 @@ contract GenerationOmega is Ownable, ERC721B {
   uint256 public constant GO_PRICE = 0.02 ether;
   uint256 public constant GO_PER_MINT = 4;
   uint256 public giftedAmount;
-
-  address private _vaultAddress = 0x699cF25b70821ecD6430506314b4272cB4Fddd68;
 
   address public rendererContractAddress;
 
@@ -65,7 +60,7 @@ contract GenerationOmega is Ownable, ERC721B {
   // ** - ADMIN - ** //
 
   function withdraw() external onlyOwner {
-    payable(_vaultAddress).transfer(address(this).balance);
+    payable(owner()).transfer(address(this).balance);
   }
 
   function gift(address[] calldata receivers) external onlyOwner {
@@ -84,7 +79,6 @@ contract GenerationOmega is Ownable, ERC721B {
     saleLive = !saleLive;
   }
 
-  // NOTE: The team can call this function to update the renderer address to point to a new upgraded renderer.
   function setRendererContractAddress(address _rendererContractAddress)
     public
     onlyOwner
