@@ -34,6 +34,8 @@ contract GenerationOmega is Ownable, ERC721B {
 
   bool public saleLive;
 
+  event CharacterMinted(address sender, uint256 tokenId);
+
   constructor() ERC721B("Generation Omega", "GO") payable {}
 
   // ** - CORE - ** //
@@ -53,8 +55,13 @@ contract GenerationOmega is Ownable, ERC721B {
     uint256 supply = _owners.length;
     require(supply + tokenQuantity <= GO_PUBLIC, "EXCEED_MAX_SALE_SUPPLY");
     for (uint256 i = 0; i < tokenQuantity; i++) {
-      _mint(msg.sender, supply++);
+      _mint(msg.sender, supply);
+      emit CharacterMinted(msg.sender, supply++);
     }
+  }
+
+  function remainingTokens() public view returns (uint256) {
+    return GO_MAX - _owners.length;
   }
 
   // ** - ADMIN - ** //

@@ -13,9 +13,21 @@ const main = async () => {
 
   let txn = await contract.setRendererContractAddress(rendererContract.address);
   txn = await contract.ownerClaim(0);
-  console.log('tx', txn);
+  console.log('owner claim tx', txn);
+  txn = await contract.ownerClaim(1);
+  console.log('owner claim 2 tx', txn);
   txn = await contract.tokenURI(0);
-  console.log('tx', txn);
+  console.log('get token URI tx', txn);
+  txn = await contract.remainingTokens();
+  console.log('get count of remaining tokens tx', txn);
+  txn = await contract.toggleSaleStatus();
+  console.log('enable sales tx', txn);
+  txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
+  console.log('buy token tx', txn);
+  txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
+  console.log('buy token tx 2', txn);
+  txn = await contract.remainingTokens();
+  console.log('get count of remaining tokens 2 tx', txn);
 };
 
 const runMain = async () => {
