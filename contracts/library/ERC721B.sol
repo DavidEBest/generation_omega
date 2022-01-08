@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
@@ -14,7 +15,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
  * @author: Squeebo *
  ********************/
 
-abstract contract ERC721B is Context, ERC165, IERC721, IERC721Metadata {
+abstract contract ERC721B is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable {
   using Address for address;
 
   // Token name
@@ -53,6 +54,7 @@ abstract contract ERC721B is Context, ERC165, IERC721, IERC721Metadata {
     return
       interfaceId == type(IERC721).interfaceId ||
       interfaceId == type(IERC721Metadata).interfaceId ||
+      interfaceId == type(IERC721Enumerable).interfaceId ||
       super.supportsInterface(interfaceId);
   }
 
@@ -442,4 +444,52 @@ abstract contract ERC721B is Context, ERC165, IERC721, IERC721Metadata {
     address to,
     uint256 tokenId
   ) internal virtual {}
+
+  /**
+   * @dev See {IERC721Enumerable-totalSupply}.
+   */
+  function totalSupply()
+    public
+    view
+    virtual
+    override
+    returns (uint256)
+  {
+    return _owners.length;
+  }
+
+  /**
+   * @dev See {IERC721Enumerable-tokenByIndex}.
+   */
+  function tokenByIndex(uint256 index)
+    public
+    view
+    virtual
+    override
+    returns (uint256)
+  {
+    require(_exists(index), "ERC721: approved query for nonexistent token");
+    return index;
+  }
+
+  /**
+   * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
+   */
+  function tokenOfOwnerByIndex(address owner, uint256 index)
+    public
+    view
+    virtual
+    override
+    returns (uint256 tokenId)
+  {
+    require(index < balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
+    uint count;
+    for (uint i; i < _owners.length; i++) {
+      if (owner == _owners[i]) {
+        if (count == index) return i;
+        else count++;
+      }
+    }
+    require(false, "ERC721Enumerable: owner index out of bounds");
+  }
 }

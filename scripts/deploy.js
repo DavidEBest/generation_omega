@@ -13,11 +13,11 @@ const main = async () => {
 
   let txn = await contract.setRendererContractAddress(rendererContract.address);
   txn = await contract.ownerClaim(0);
-  console.log('tx', txn);
+  console.log('owner claim tx', txn);
   txn = await contract.toggleSaleStatus();
-  console.log('tx', txn);
-  txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
-  console.log('tx', txn);
+  console.log('enable sale tx', txn);
+  // txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
+  // console.log('tx', txn);
 };
 
 const runMain = async () => {

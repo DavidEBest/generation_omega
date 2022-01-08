@@ -14,8 +14,6 @@ const main = async () => {
   let txn = await contract.setRendererContractAddress(rendererContract.address);
   txn = await contract.ownerClaim(0);
   console.log('owner claim tx', txn);
-  txn = await contract.ownerClaim(1);
-  console.log('owner claim 2 tx', txn);
   txn = await contract.tokenURI(0);
   console.log('get token URI tx', txn);
   txn = await contract.remainingTokens();
@@ -23,11 +21,23 @@ const main = async () => {
   txn = await contract.toggleSaleStatus();
   console.log('enable sales tx', txn);
   txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
+  const fromAddr = txn.from;
   console.log('buy token tx', txn);
   txn = await contract.buy(1, { value: ethers.utils.parseEther("0.02") });
   console.log('buy token tx 2', txn);
   txn = await contract.remainingTokens();
   console.log('get count of remaining tokens 2 tx', txn);
+
+  // iterating over the tokens
+  console.log('Addr', fromAddr);
+  txn = await contract.balanceOf(fromAddr);
+  console.log('balance', txn);
+  const balance = txn;
+  for (let index = 0; index < balance; index++) {
+    txn = await contract.tokenOfOwnerByIndex(fromAddr, index);
+    console.log('index', index, txn);
+    // txn returned here can be fed into tokenURI function.
+  }
 };
 
 const runMain = async () => {
