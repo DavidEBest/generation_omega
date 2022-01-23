@@ -17,6 +17,7 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./library/Base64.sol";
+import "./GenerationOmegaTypes.sol";
 
 contract GenerationOmegaRenderer is Ownable {
 
@@ -50,46 +51,114 @@ contract GenerationOmegaRenderer is Ownable {
     "Making"
   ];
 
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    returns (string memory)
-  {
+  struct Attributes {
+    string str;
+    string dex;
+    string con;
+    string intel;
+    string wis;
+    string cha;
+    string greatSkill;
+    string goodSkill1;
+    string goodSkill2;
+  }
+
+  function getAttributeJson(
+    string memory traitName,
+    string memory traitValue
+  ) internal pure returns (string memory) {
+    return string(abi.encodePacked('{"trait_type": "', traitName, '", "max_value": 7, "value": ', traitValue, '},'));
+  }
+
+  function getAllAttributesJson(
+    Attributes memory attr
+  ) internal pure returns (string memory) {
+    return string(
+      abi.encodePacked(
+        getAttributeJson('Strength', attr.str),
+        getAttributeJson('Dexterity', attr.dex),
+        getAttributeJson('Constitution', attr.con),
+        getAttributeJson('Intelligence', attr.intel),
+        getAttributeJson('Wisdom', attr.wis),
+        getAttributeJson('Charisma', attr.cha)
+      )
+    );
+  }
+
+  function getSkillJson(
+    string memory skillValue 
+  ) internal pure returns (string memory) {
+    return string(abi.encodePacked('{"trait_type": "Skill", "value": "', skillValue, '"},'));
+  }
+
+  function getJsonString(
+    uint256 tokenId,
+    Attributes memory attr,
+    GenerationOmegaTypes.GenOmega memory omegaData,
+    string memory svgOutput
+  ) internal pure returns (string memory) {
+    return Base64.encode(
+      bytes(
+        string(
+          abi.encodePacked(
+            '{"name": "Generation Omega #', toString(tokenId), '",',
+            '"image": "data:image/svg+xml;base64,', Base64.encode(bytes(svgOutput)), '",',
+            '"attributes":[',
+              getAllAttributesJson(attr),
+              getSkillJson(attr.greatSkill),
+              getSkillJson(attr.goodSkill1),
+              getSkillJson(attr.goodSkill2),
+              '{"trait_type": "Hit Points", "value": ', toString(omegaData.hp), ', "max_value":', toString(omegaData.maxHp), '},',
+              '{"trait_type": "Experience Points", "value": ', toString(omegaData.xp), '}',
+            ']}'
+          )
+        )
+      )
+    );
+  }
+
+  function tokenURI(
+    uint256 tokenId,
+    GenerationOmegaTypes.GenOmega memory omegaData
+  ) public view returns (string memory) {
     // Attributes
+    Attributes memory attr;
     // Attributes are on a -3 to +3 scale, mapped to 0-7
-    uint256 str = getAttribute('str', tokenId);
-    uint256 dex = getAttribute('dex', tokenId);
-    uint256 con = getAttribute('con', tokenId);
-    uint256 intel = getAttribute('int', tokenId);
-    uint256 wis = getAttribute('wis', tokenId);
-    uint256 cha = getAttribute('cha', tokenId);
+    attr.str = toString(getAttribute('str', tokenId));
+    attr.dex = toString(getAttribute('dex', tokenId));
+    attr.con = toString(getAttribute('con', tokenId));
+    attr.intel = toString(getAttribute('int', tokenId));
+    attr.wis = toString(getAttribute('wis', tokenId));
+    attr.cha = toString(getAttribute('cha', tokenId));
 
     // Skills
-    string memory greatSkill = getSkill('sk1', tokenId, '(+2)');
-    string memory goodSkill1 = getSkill('sk2', tokenId, '(+1)');
-    string memory goodSkill2 = getSkill('sk3', tokenId, '(+1)');
+    attr.greatSkill = getSkill('sk1', tokenId, '(+2)');
+    attr.goodSkill1 = getSkill('sk2', tokenId, '(+1)');
+    attr.goodSkill2 = getSkill('sk3', tokenId, '(+1)');
 
     // SVG
-    string[19] memory parts;
+    string[21] memory parts;
     parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
     parts[1] = string(abi.encodePacked('Generation Omega #', toString(tokenId)));
     parts[2] = '</text><text x="10" y="40" class="base">';
-    parts[3] = string(abi.encodePacked('STR:', toString(str)));
+    parts[3] = string(abi.encodePacked('STR:', attr.str));
     parts[4] = '</text><text x="10" y="60" class="base">';
-    parts[5] = string(abi.encodePacked('DEX:', toString(dex)));
+    parts[5] = string(abi.encodePacked('DEX:', attr.dex));
     parts[6] = '</text><text x="10" y="80" class="base">';
-    parts[7] = string(abi.encodePacked('CON:', toString(con)));
+    parts[7] = string(abi.encodePacked('CON:', attr.con));
     parts[8] = '</text><text x="10" y="100" class="base">';
-    parts[9] = string(abi.encodePacked('INT:', toString(intel)));
+    parts[9] = string(abi.encodePacked('INT:', attr.intel));
     parts[10] = '</text><text x="10" y="120" class="base">';
-    parts[11] = string(abi.encodePacked('WIS:', toString(wis)));
+    parts[11] = string(abi.encodePacked('WIS:', attr.wis));
     parts[12] = '</text><text x="10" y="140" class="base">';
-    parts[13] = string(abi.encodePacked('CHA:', toString(cha)));
+    parts[13] = string(abi.encodePacked('CHA:', attr.cha));
     parts[14] = '</text><text x="10" y="160" class="base">';
     parts[15] = 'Skills';
     parts[16] = '</text><text x="10" y="180" class="base">';
-    parts[17] = string(abi.encodePacked(greatSkill, ', ', goodSkill1, ', ', goodSkill2));
-    parts[18] = '</text></svg>';
+    parts[17] = string(abi.encodePacked(attr.greatSkill, ', ', attr.goodSkill1, ', ', attr.goodSkill2));
+    parts[18] = '</text><text x="10" y="200" class="base">';
+    parts[19] = string(abi.encodePacked('HP: ', toString(omegaData.hp), '/', toString(omegaData.maxHp), '  XP: ', toString(omegaData.xp)));
+    parts[20] = '</text></svg>';
 
     string memory output = string(
       abi.encodePacked(
@@ -119,32 +188,15 @@ contract GenerationOmegaRenderer is Ownable {
         parts[18]
       )
     );
-     
 
-
-    string memory json = Base64.encode(
-      bytes(
-        string(
-          abi.encodePacked(
-            '{"name": "Generation Omega #', toString(tokenId), '",',
-            '"image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '",',
-            '"attributes":[',
-              '{"trait_type": "Strength", "max_value": 7, "value": ', toString(str), '},',
-              '{"trait_type": "Dexterity", "max_value": 7, "value": ', toString(dex), '},',
-              '{"trait_type": "Constitution", "max_value": 7, "value": ', toString(con), '},',
-              '{"trait_type": "Intelligence", "max_value": 7, "value": ', toString(intel), '},',
-              '{"trait_type": "Wisdom", "max_value": 7, "value": ', toString(wis), '},',
-              '{"trait_type": "Charisma", "max_value": 7, "value": ', toString(cha), '},',
-              '{"trait_type": "Skill", "value": "', greatSkill, '"},', 
-              '{"trait_type": "Skill", "value": "', goodSkill1, '"},', 
-              '{"trait_type": "Skill", "value": "', goodSkill2, '"}', 
-            ']}'
-          )
-        )
+    output = string(
+      abi.encodePacked(
+        output,
+        parts[19],
+        parts[20]
       )
     );
-    output = string(abi.encodePacked("data:application/json;base64,", json));
-    return output;
+    return string(abi.encodePacked("data:application/json;base64,", getJsonString(tokenId, attr, omegaData, output)));
   }
 
   function toString(uint256 value) internal pure returns (string memory) {
