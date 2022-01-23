@@ -66,11 +66,68 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "hpRemaining",
+        "type": "uint256"
+      }
+    ],
+    "name": "CharacterHealed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "hpRemaining",
+        "type": "uint256"
+      }
+    ],
+    "name": "CharacterInjured",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
     ],
     "name": "CharacterMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "xpTotal",
+        "type": "uint256"
+      }
+    ],
+    "name": "CharacterXpEarned",
     "type": "event"
   },
   {
@@ -240,6 +297,43 @@
         "type": "uint256"
       }
     ],
+    "name": "diceRoll",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "xpAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "earnXp",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
     "name": "getApproved",
     "outputs": [
       {
@@ -275,6 +369,42 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "healAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "heal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "damageAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "injure",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
